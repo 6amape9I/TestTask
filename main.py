@@ -1,6 +1,5 @@
 from custom_structure.Tree import TreeNode
-from image_output import save
-
+from image_output import save, video_create
 from logic import input_parse
 
 
@@ -60,29 +59,32 @@ def main():
     deleted = 0
     photo_counter = 0
 
-    save(first_tree, filename=f'img/first_tree_{photo_counter}')
-    save(second_tree, filename=f'img/second_tree_{photo_counter}')
+    save(root=first_tree, filename=f'img/first/tree_{photo_counter}')
+    save(root=second_tree, filename=f'img/second/tree_{photo_counter}')
     photo_counter += 1
 
     while worst_parent:
 
         worst_parent = find_worst_parent(m_nodes, first_tree, second_tree)
 
-        save(root=first_tree, highlight_node=worst_parent, filename=f'img/first_tree_{photo_counter}')
-        save(root=second_tree, highlight_node=worst_parent, filename=f'img/second_tree_{photo_counter}')
+        save(root=first_tree, highlight_node=worst_parent, filename=f'img/first/tree_{photo_counter}')
+        save(root=second_tree, highlight_node=worst_parent, filename=f'img/second/tree_{photo_counter}')
         photo_counter += 1
 
         first_tree.delete(worst_parent)
         second_tree.delete(worst_parent)
 
-        save(root=first_tree, filename=f'img/first_tree_{photo_counter}')
-        save(root=second_tree, filename=f'img/second_tree_{photo_counter}')
+        save(root=first_tree, filename=f'img/first/tree_{photo_counter}')
+        save(root=second_tree, filename=f'img/second/tree_{photo_counter}')
         photo_counter += 1
 
         deleted += 1
 
     answer = m_nodes - deleted
     print(answer)
+
+    video_create(path="img/first")
+    video_create(path="img/second")
 
 
 if __name__ == "__main__":
