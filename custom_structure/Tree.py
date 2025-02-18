@@ -11,6 +11,13 @@ class TreeNode:
         child.parent = self
         self.children.append(child)
 
+    def create_from_list(self, pairs):
+        for pair in pairs:
+            parent_val, child_val = pair
+            parent = self.search(parent_val)
+            parent.add_child(child_val)
+        return self
+
     def __str__(self, level=0):
         result = "  " * level + f"|-- {self.value}\n"
         for child in self.children:
