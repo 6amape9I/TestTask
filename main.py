@@ -1,24 +1,7 @@
 from custom_structure.Tree import TreeNode
+from image_output import save
 
-
-def input_parse():
-    max_nodes = int(input())
-    first_tree_pairs = []
-    second_tree_pairs = []
-
-    _ = input()
-
-    line = input()
-    while line != "Tree2":
-        first_tree_pairs.append(tuple(map(int, line.split())))
-        line = input()
-
-    line = input()
-    while line != "":
-        second_tree_pairs.append(tuple(map(int, line.split())))
-        line = input()
-
-    return max_nodes, first_tree_pairs, second_tree_pairs
+from logic import input_parse
 
 
 def find_worst_parent(m_nodes, first_tree, second_tree):
@@ -57,7 +40,6 @@ def find_worst_parent(m_nodes, first_tree, second_tree):
 
     return worst_parent
 
-
 def main():
     #m_nodes, first_tree_pairs, second_tree_pairs = input_parse()
     first_tree_pairs = [(1, 2), (1, 4), (1, 7), (2, 12), (2, 3),
@@ -70,28 +52,34 @@ def main():
                          (13, 15), (13, 10),
                          (7, 14), (14, 9)]
     m_nodes = 15
-    print(first_tree_pairs)
-    print(second_tree_pairs)
-    print(m_nodes)
 
     first_tree = TreeNode(1).create_from_list(first_tree_pairs)
     second_tree = TreeNode(1).create_from_list(second_tree_pairs)
 
-    print(first_tree)
-    print(second_tree)
-
     worst_parent = 32
     deleted = 0
+    photo_counter = 0
+
+    save(first_tree, filename=f'img/first_tree_{photo_counter}')
+    save(second_tree, filename=f'img/second_tree_{photo_counter}')
+    photo_counter += 1
 
     while worst_parent:
+
         worst_parent = find_worst_parent(m_nodes, first_tree, second_tree)
-        print(worst_parent)
+
+        save(root=first_tree, highlight_node=worst_parent, filename=f'img/first_tree_{photo_counter}')
+        save(root=second_tree, highlight_node=worst_parent, filename=f'img/second_tree_{photo_counter}')
+        photo_counter += 1
+
         first_tree.delete(worst_parent)
         second_tree.delete(worst_parent)
-        deleted += 1
 
-        print(first_tree)
-        print(second_tree)
+        save(root=first_tree, filename=f'img/first_tree_{photo_counter}')
+        save(root=second_tree, filename=f'img/second_tree_{photo_counter}')
+        photo_counter += 1
+
+        deleted += 1
 
     answer = m_nodes - deleted
     print(answer)
