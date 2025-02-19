@@ -34,7 +34,7 @@ def video_create(path="img"):
     height, width, layers = img_sorted[0].shape
     output_name = path.parent / f'{path.name}.avi'
     output_name = r'' + str(output_name)
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
     fps = 1
     video = cv2.VideoWriter(output_name, fourcc, fps, (width, height))
 
