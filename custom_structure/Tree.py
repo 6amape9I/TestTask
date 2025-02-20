@@ -1,10 +1,40 @@
-
 class TreeNode:
 
-    def __init__(self, value):
+    def __init__(self, value: int):
         self.value = value
         self.parent = None
         self.children = []
+
+    def __eq__(self, other: 'TreeNode'):
+        if self.value != other.value:
+            return False
+
+        self_set = set(
+            [child.value for child in self.children]
+        )
+        other_set = set(
+            [child.value for child in other.children]
+        )
+
+        if self_set != other_set:
+            return False
+
+        for child in self.children:
+            if child not in other.children:
+                return False
+        return True
+
+    def __str__(self, level=0):
+        result = "  " * level + f"|-- {self.value}\n"
+        for child in self.children:
+            result += child.__str__(level + 1)
+        return result
+
+    def __hash__(self):
+        return hash(self.value)
+
+    def __len__(self):
+        return 1 + sum([len(child) for child in self.children])
 
     def add_child(self, value):
         child = TreeNode(value)
@@ -18,12 +48,6 @@ class TreeNode:
             parent.add_child(child_val)
         return self
 
-    def __str__(self, level=0):
-        result = "  " * level + f"|-- {self.value}\n"
-        for child in self.children:
-            result += child.__str__(level + 1)
-        return result
-
     def search(self, parent_val):
         if self.value == parent_val:
             return self
@@ -32,6 +56,18 @@ class TreeNode:
             if result:
                 return result
         return None
+
+    def get_all_nodes(self):
+        nodes = []
+        if self is None:
+            return nodes
+        stack = [self]
+        while stack:
+            node = stack.pop()
+            nodes.append(node)
+            for child in reversed(node.children):
+                stack.append(child)
+        return nodes
 
     def delete(self, value):
         node = self.search(value)

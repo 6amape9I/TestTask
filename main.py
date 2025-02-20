@@ -1,43 +1,6 @@
 from custom_structure.Tree import TreeNode
 from image_output import save, video_create
-from logic import input_parse
-
-
-def find_worst_parent(m_nodes, first_tree, second_tree):
-    bad_parents = [0] * (m_nodes + 1)
-
-    for i in range(2, m_nodes):
-        first_tree_el = first_tree.search(i)
-        second_tree_el = second_tree.search(i)
-
-        if first_tree_el is None or second_tree_el is None:
-            continue
-        if first_tree_el.parent.value != second_tree_el.parent.value:
-            bad_parents[first_tree_el.parent.value] += 1
-            bad_parents[second_tree_el.parent.value] += 1
-
-    print(bad_parents[1:])
-
-    worst_parent = 0
-
-    for i in range(1, m_nodes + 1):
-        if bad_parents[i] > bad_parents[worst_parent]:
-            worst_parent = i
-
-    print(worst_parent)
-
-    if worst_parent == 1:
-        worst_parent = 0
-        trees_values = set([el.value for el in first_tree.children + second_tree.children])
-        for el in trees_values:
-            if bad_parents[el] > bad_parents[worst_parent]:
-                worst_parent = el
-        return worst_parent
-
-    if worst_parent == 0:
-        return False
-
-    return worst_parent
+from logic import input_parse, find_worst_parent
 
 
 def main():
