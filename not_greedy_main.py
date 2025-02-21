@@ -12,8 +12,6 @@ def node_list_generator(m_nodes):
 
 def not_greedy_main(m_nodes=0, first_tree_pairs=None, second_tree_pairs=None):
     #m_nodes, first_tree_pairs, second_tree_pairs = input_parse()
-
-
     list_gen = node_list_generator(m_nodes)
 
     first_tree = TreeNode(1).create_from_list(first_tree_pairs)
