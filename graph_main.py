@@ -1,6 +1,7 @@
 from custom_structure.Graph import Graph
 from image_output import video_create
-from logic import different_in_list, find_all_cycles, count_val_in_cycles, count_transitive_edges, delete_update
+from logic import (different_in_list, find_all_cycles, count_val_in_cycles, count_transitive_edges, delete_update,
+                   input_parse)
 
 def graph_main(m_nodes=0, first_tree_pairs=None, second_tree_pairs=None):
     #m_nodes, first_tree_pairs, second_tree_pairs = input_parse()
