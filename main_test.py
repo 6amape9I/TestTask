@@ -2,6 +2,7 @@ import pytest
 import os
 
 from custom_structure.Tree import TreeNode
+from graph_main import graph_main
 from image_output import save, video_create
 from main import find_worst_parent
 
@@ -44,5 +45,20 @@ class TestWorstParent:
         tree1 = TreeNode(1).create_from_list([(1, 2)])
         tree2 = TreeNode(1).create_from_list([(1, 2)])
         assert find_worst_parent(2, tree1, tree2) is False
+
+class TestMain():
+    def test_main(self):
+        first_tree_pairs = [(1, 2), (1, 4), (1, 7), (2, 12), (2, 3),
+                            (3, 10), (4, 11), (4, 5), (4, 14),
+                            (5, 9), (5, 15), (7, 8), (7, 6),
+                            (8, 13)]
+        second_tree_pairs = [(1, 6), (1, 2), (1, 13), (1, 7),
+                             (6, 3), (3, 4), (3, 5),
+                             (2, 11), (2, 8), (13, 12),
+                             (13, 15), (13, 10),
+                             (7, 14), (14, 9)]
+        m_nodes = 15
+
+        assert graph_main(m_nodes, first_tree_pairs, second_tree_pairs), 4
 
 

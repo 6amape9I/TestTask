@@ -77,5 +77,34 @@ class TreeNode:
                 node.parent.children.append(child)
             node.parent.children.remove(node)
             node.parent = None
-            return True
+            return self
         return False
+
+    def __copy__(self):
+        new_tree = TreeNode(self.value)
+        new_tree.parent = self.parent
+        new_tree.children = [child.__copy__() for child in self.children]
+        return new_tree
+
+    def copy(self):
+        new_tree = TreeNode(self.value)
+        new_tree.parent = self.parent
+        new_tree.children = [child.copy() for child in self.children]
+        return new_tree
+
+    def get_edges(self ):
+        edges = []
+        if self is None:
+            return edges
+        stack = [self]
+        while stack:
+            node = stack.pop()
+            for child in node.children:
+                edges.append((node.value, child.value))
+                stack.append(child)
+        return edges
+
+    def delete_list(self, values):
+        for value in values:
+            self.delete(value)
+        return self
