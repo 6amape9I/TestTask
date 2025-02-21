@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from graphviz import Digraph
+
 
 class Graph:
 
@@ -36,4 +38,21 @@ class Graph:
             if isinstance(graph, int):
                 graph = Graph(pair[0])
             graph.add(pair[1])
+        return self
+
+    def save_graph(self, filename='graph'):
+        dot = Digraph()
+        visited = set()
+
+        def add_nodes_edges(node):
+            if node is None or node.value in visited:
+                return
+            visited.add(node.value)
+            dot.node(str(node.value))
+            for child in node.neighbors:
+                dot.edge(str(node.value), str(child.value))
+                add_nodes_edges(child)
+
+        add_nodes_edges(self)
+        dot.render(filename, format="jpg", cleanup=True)
         return self
