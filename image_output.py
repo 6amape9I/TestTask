@@ -24,6 +24,22 @@ def save(root, highlight_node=None, filename='tree'):
     add_nodes_edges(root)
     dot.render(filename, format="jpg", cleanup=True)
 
+def save_graph(root, filename='tree'):
+    dot = Digraph()
+    visited = set()
+
+    def add_nodes_edges(node):
+        if node is None or node.value in visited:
+            return
+        visited.add(node.value)
+        dot.node(str(node.value))
+        for neighbor in node.neighbors:
+            dot.edge(str(node.value), str(neighbor.value))
+            add_nodes_edges(neighbor)
+
+    add_nodes_edges(root)
+    dot.render(filename, format="jpg", cleanup=True)
+
 
 def video_create(path="img"):
     path = Path(path)

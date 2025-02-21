@@ -1,11 +1,36 @@
 from custom_structure.Graph import Graph
+from image_output import save, save_graph
+from logic import input_parse
+
+def different_in_list(list1, list2):
+    list = []
+    for elem in list1:
+        if elem not in list2:
+            list.append(elem)
+    for elem in list2:
+        if elem not in list1:
+            list.append(elem)
+    return list
 
 
-def delete_update(value, graph_edges):
-    graph_edges = new_edges(graph_edges, value)
-    sorted(graph_edges, key=lambda x: x[0])
+def delete_update(value, first_tree_pairs, second_tree_pairs):
+    differ = different_in_list(first_tree_pairs, second_tree_pairs)
+    print("Different: ", differ)
+
+    first_tree_pairs = new_edges(first_tree_pairs, value)
+    print("First tree pairs: ", first_tree_pairs)
+    second_tree_pairs = new_edges(second_tree_pairs, value)
+    print("Second tree pairs: ", second_tree_pairs)
+
+    graph_edges = first_tree_pairs.copy()
+    for pair in second_tree_pairs:
+        if pair not in graph_edges:
+            graph_edges.append(pair)
     graph = Graph(1).create_from_list(graph_edges)
-    return graph, graph_edges
+
+    #sorted(graph_edges, key=lambda x: x[0])
+    #graph = Graph(1).create_from_list(graph_edges)
+    return graph, graph_edges, first_tree_pairs, second_tree_pairs
 
 
 def new_edges(graph_edges, value):
@@ -28,7 +53,6 @@ def new_edges(graph_edges, value):
 
 def find_all_cycles(graph):
     cycles = []
-    max_cycle = 0
 
     def find_cycle(node, path):
         if node.value in path:
@@ -64,7 +88,7 @@ def cycles_unique(cycles):
 
 def count_transitive_edges(nodes_values, edges):
     minimum = []
-    minimum_val = 1000000
+    minimum_val = 2 ** 32
     answer = {}
     for node_val in nodes_values:
         end_with_value = []
@@ -94,31 +118,89 @@ def count_transitive_edges(nodes_values, edges):
     return answer, minimum
 
 
-def main():
-    # m_nodes, first_tree_pairs, second_tree_pairs = input_parse()
-    first_tree_pairs = [(1, 2), (2, 3), (3, 4), (4, 5)]
-    second_tree_pairs = [(1, 2), (2, 3), (2, 4), (4, 5)]
-    m_nodes = 5
+def count_val_in_cycles(cycles):
+    output = {}
+    for cycle in cycles:
+        for val in cycle:
+            if val == 1:
+                continue
+            if val in output:
+                output[val] += 1
+            else:
+                output[val] = 1
+    return output
 
-    graph_root = Graph(1)
-    graph_edges = first_tree_pairs
+
+def main():
+    m_nodes, first_tree_pairs, second_tree_pairs = input_parse()
+
+    print("First tree pairs: ", first_tree_pairs)
+    print("Second tree pairs: ", second_tree_pairs)
+
+    differ = different_in_list(first_tree_pairs, second_tree_pairs)
+    print("Different: ", differ)
+
+    graph_edges = first_tree_pairs.copy()
     for pair in second_tree_pairs:
         if pair not in graph_edges:
             graph_edges.append(pair)
-    graph = graph_root.create_from_list(graph_edges)
+    graph = Graph(1).create_from_list(graph_edges)
 
     cycles = find_all_cycles(graph)
+    deleted = []
 
-    while cycles:
-        for cycle in cycles:
-            all_possible, mins = count_transitive_edges(cycle, graph_edges)
-            print("All possible: ", all_possible)
-            print("Mins: ", mins)
-            for min_val in mins:
-                graph, graph_edges = delete_update(min_val, graph_edges)
-                print("Graph edges: ", graph_edges)
-                print("Graph: ", graph)
+    photo_counter = 0
+    save_graph(root=graph, filename=f'img/graph_{photo_counter}')
+    photo_counter += 1
+
+    while cycles or differ:
+        if not cycles:
+            differ = different_in_list(first_tree_pairs, second_tree_pairs)
+            differ_map = {}
+            for pair in differ:
+                for val in pair:
+                    if val in differ_map:
+                        differ_map[val] += 1
+                    else:
+                        differ_map[val] = 1
+            max_elements = [key for key, value in differ_map.items() if value == max(differ_map.values())]
+            print("Max elements: ", max_elements)
+            print("Differ: ", differ_map)
+            max_el = max_elements[0]
+            graph, graph_edges, first_tree_pairs, second_tree_pairs = delete_update(max_el, first_tree_pairs, second_tree_pairs)
+            deleted.append(max_el)
+            differ = different_in_list(first_tree_pairs, second_tree_pairs)
+            cycles = find_all_cycles(graph)
+            continue
+
+        val_in_cycles = count_val_in_cycles(cycles)
+        max_elements = [key for key, value in val_in_cycles.items() if value == max(val_in_cycles.values())]
+        print("Max elements: ", max_elements)
+
+        all_possible, mins = count_transitive_edges(max_elements, graph_edges)
+        print("All possible: ", all_possible)
+        print("Mins: ", mins)
+
+        worst_elem = mins[0]
+        graph, graph_edges, first_tree_pairs, second_tree_pairs = delete_update(worst_elem, first_tree_pairs, second_tree_pairs)
+        deleted.append(worst_elem)
+
+        save_graph(root=graph, filename=f'img/graph_{photo_counter}')
+        photo_counter += 1
+
+        print("_______________________________________")
+        print("Graph edges: ", graph_edges)
+
         cycles = find_all_cycles(graph)
+
+    differ = different_in_list(first_tree_pairs, second_tree_pairs)
+    print("Different: ", differ)
+
+    print("Answer: ", len(deleted))
+    print("Deleted: ", deleted)
+
+    save_graph(root=graph, filename=f'img/graph_{photo_counter}')
+    photo_counter += 1
 
 
 if __name__ == "__main__":

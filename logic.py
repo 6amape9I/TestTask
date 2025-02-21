@@ -39,8 +39,6 @@ def find_worst_parent(m_nodes, first_tree, second_tree):
         if bad_parents[i] > bad_parents[worst_parent]:
             worst_parent = i
 
-    print(worst_parent)
-
     if worst_parent == 1:
         worst_parent = 0
         trees_values = set([el.value for el in first_tree.children + second_tree.children])
@@ -52,25 +50,26 @@ def find_worst_parent(m_nodes, first_tree, second_tree):
     if worst_parent == 0:
         return False
 
+    print(worst_parent)
     return worst_parent
 
 def find_bad_nodes(m_nodes, first_tree, second_tree):
 
     bad_nodes = set()
 
-    for i in range(2, m_nodes):
+    for i in range(2, m_nodes + 1):
         first_tree_el = first_tree.search(i)
         second_tree_el = second_tree.search(i)
 
         if first_tree_el is None or second_tree_el is None:
             continue
         if first_tree_el.parent.value != second_tree_el.parent.value:
-            bad_nodes.add(first_tree_el)
-            bad_nodes.add(second_tree_el)
+            bad_nodes.add(first_tree_el.value)
+            bad_nodes.add(second_tree_el.value)
             if first_tree_el.parent.value != 1:
-                bad_nodes.add(first_tree_el.parent)
+                bad_nodes.add(first_tree_el.parent.value)
             if second_tree_el.parent.value != 1:
-                bad_nodes.add(second_tree_el.parent)
+                bad_nodes.add(second_tree_el.parent.value)
 
     return bad_nodes
 

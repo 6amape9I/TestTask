@@ -26,9 +26,11 @@ def main():
     save(root=first_tree, filename=f'img/first/tree_{photo_counter}')
     save(root=second_tree, filename=f'img/second/tree_{photo_counter}')
     photo_counter += 1
+    deleted = []
 
     while worst_parent:
         worst_parent = find_worst_parent(m_nodes, first_tree, second_tree)
+        deleted.append(worst_parent)
 
         save(root=first_tree, highlight_node=worst_parent, filename=f'img/first/tree_{photo_counter}')
         save(root=second_tree, highlight_node=worst_parent, filename=f'img/second/tree_{photo_counter}')
@@ -41,10 +43,9 @@ def main():
         save(root=second_tree, filename=f'img/second/tree_{photo_counter}')
         photo_counter += 1
 
-        deleted += 1
-
-    answer = m_nodes - deleted
-    print(answer)
+    answer = m_nodes - len(deleted)
+    print("Answer: ", answer)
+    print("Deleted: ", deleted)
 
 
 if __name__ == "__main__":
