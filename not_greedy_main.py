@@ -10,8 +10,8 @@ def node_list_generator(m_nodes):
         bit_mask += 1
 
 
-def main():
-    m_nodes, first_tree_pairs, second_tree_pairs = input_parse()
+def not_greedy_main(m_nodes=0, first_tree_pairs=None, second_tree_pairs=None):
+    #m_nodes, first_tree_pairs, second_tree_pairs = input_parse()
 
 
     list_gen = node_list_generator(m_nodes)
@@ -37,7 +37,8 @@ def main():
 
     min_answer = min(answer_list, key=len)
     print(min_answer)
+    return min_answer
 
 
 if __name__ == "__main__":
-    main()
+    not_greedy_main()

@@ -5,6 +5,7 @@ from custom_structure.Tree import TreeNode
 from graph_main import graph_main
 from image_output import save, video_create
 from main import find_worst_parent
+from not_greedy_main import not_greedy_main
 
 
 class TestTreeNode:
@@ -59,6 +60,56 @@ class TestMain():
                              (7, 14), (14, 9)]
         m_nodes = 15
 
-        assert graph_main(m_nodes, first_tree_pairs, second_tree_pairs), 4
+        assert graph_main(m_nodes, first_tree_pairs, second_tree_pairs), 8
+
+    def test_not_greed_main(self):
+        first_tree_pairs = [(1, 2), (1, 4), (1, 7), (2, 12), (2, 3),
+                            (3, 10), (4, 11), (4, 5), (4, 14),
+                            (5, 9), (5, 15), (7, 8), (7, 6),
+                            (8, 13)]
+        second_tree_pairs = [(1, 6), (1, 2), (1, 13), (1, 7),
+                             (6, 3), (3, 4), (3, 5),
+                             (2, 11), (2, 8), (13, 12),
+                             (13, 15), (13, 10),
+                             (7, 14), (14, 9)]
+        m_nodes = 15
+
+        assert not_greedy_main(m_nodes, first_tree_pairs, second_tree_pairs), 7
+
+    def test_big_problem(self):
+        first_tree_pairs = [(1, 2), (1, 2), (2, 4), (2, 5), (3, 6),
+                            (3, 7), (4, 8), (4, 9), (5, 10), (5, 11),
+                            (6, 12), (6, 13), (7, 14), (7, 15), (8, 16),
+                            (8, 17), (9, 18), (9, 19), (10, 20), (10, 21),
+                            (11, 22), (11, 23), (12, 24), (12, 25), (13, 26),
+                            (13, 27), (14, 28), (14, 29), (15, 30)]
+        second_tree_pairs = [(1, 2), (1, 2), (2, 4), (2, 5), (3, 6),
+                            (3, 7), (4, 8), (4, 9), (7, 10), (5, 11),
+                            (5, 12), (6, 13), (7, 14), (7, 15), (8, 16),
+                            (8, 17), (9, 18), (9, 19), (10, 20), (10, 21),
+                            (11, 22), (11, 23), (12, 24), (12, 25), (13, 26),
+                            (13, 27), (14, 28), (12, 29), (15, 30)]
+        m_nodes = 30
+
+        assert graph_main(m_nodes, first_tree_pairs, second_tree_pairs), 8
+
+    def test_simple(self):
+        first_tree_pairs = [(1, 2), (2, 3), (3, 4), (4, 5)]
+        second_tree_pairs = [(1, 2), (2, 3), (2, 4), (4, 5)]
+        m_nodes = 5
+
+        assert graph_main(m_nodes, first_tree_pairs, second_tree_pairs), 1
+        assert not_greedy_main(m_nodes, first_tree_pairs, second_tree_pairs), 1
+
+    def test_no_delete(self):
+        first_tree_pairs = [(1, 2), (2, 3), (3, 4), (4, 5)]
+        second_tree_pairs = [(1, 2), (2, 3), (2, 4), (4, 5)]
+        m_nodes = 5
+
+        assert graph_main(m_nodes, first_tree_pairs, second_tree_pairs), 0
+        assert not_greedy_main(m_nodes, first_tree_pairs, second_tree_pairs), 0
+
+
+
 
 
